@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MM WBCS ACADEMY 9732974125-MISCELLANEOUS FULL LENGTH Online Mock Test 12</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { background-color: #f4f6f9; color: #212529; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    
+    h1, h2 { text-align: center; color: #1e3a8a; margin-bottom: 20px; }
+    
+    /* Login Screen */
+    .login-card { max-width: 420px; margin: 40px auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #334155; }
+    .form-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; }
+    
+    /* Buttons */
+    .btn { display: inline-block; width: 100%; padding: 12px; background: #16a34a; color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .btn:hover { background: #15803d; }
+    .btn-submit { background: #2563eb; margin-top: 20px; }
+    .btn-submit:hover { background: #1d4ed8; }
+    .btn-print { background: #475569; margin-bottom: 20px; }
+    .btn-print:hover { background: #334155; }
+    
+    /* Header Bar */
+    .header-bar { display: flex; justify-content: space-between; align-items: center; background: #eff6ff; padding: 12px 20px; border-radius: 6px; margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; border: 1px solid #bfdbfe; }
+    .timer { font-size: 18px; font-weight: bold; color: #dc2626; }
+    
+    /* Question Container */
+    .question-card { border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin-bottom: 16px; background: #fff; }
+    .question-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; line-height: 1.5; color: #0f172a; }
+    .options-list { list-style: none; }
+    .option-item { padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 4px; margin-bottom: 8px; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; }
+    .option-item:hover { background: #f1f5f9; }
+    .option-item input[type="radio"] { margin-right: 12px; transform: scale(1.2); }
+    
+    /* Review Highlighting */
+    .correct-ans { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #14532d; font-weight: bold; }
+    .wrong-ans { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #7f1d1d; font-weight: bold; }
+    .status-tag { margin-top: 8px; font-size: 14px; font-weight: bold; }
+
+    /* Summary Dashboard */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 25px; text-align: center; }
+    .metric-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 6px; }
+    .metric-card div { font-size: 22px; font-weight: bold; margin-top: 4px; }
+    
+    .hidden { display: none !important; }
+
+    /* Print styling */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .container { box-shadow: none; border: none; max-width: 100%; padding: 0; }
+      .btn-print, .header-bar { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- Step 1: Login Form -->
+  <div id="loginSection" class="login-card">
+    <h2>Student Login</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="studentName">Full Name:</label>
+        <input type="text" id="studentName" required placeholder="Enter full name">
+      </div>
+      <div class="form-group">
+        <label for="studentPhone">Mobile Number:</label>
+        <input type="tel" id="studentPhone" required placeholder="10-digit mobile number">
+      </div>
+      <button type="submit" class="btn">Start Mock Test</button>
+    </form>
+  </div>
+
+  <!-- Step 2: Exam Dashboard -->
+  <div id="examSection" class="hidden">
+    <div class="header-bar">
+      <div>Candidate: <strong id="displayName"></strong></div>
+      <div class="timer">Time Left: <span id="timerDisplay">90:00</span></div>
+    </div>
+    <form id="examForm">
+      <div id="questionsContainer"></div>
+      <button type="button" onclick="submitExam()" class="btn btn-submit">Submit Exam</button>
+    </form>
+  </div>
+
+  <!-- Step 3: Answer Preview & Result Summary -->
+  <div id="resultSection" class="hidden">
+    <h2>Result Summary & Preview</h2>
+    
+    <div class="summary-grid">
+      <div class="metric-card">Total Score<div id="scoreVal">0</div></div>
+      <div class="metric-card" style="color:#16a34a;">Correct<div id="correctVal">0</div></div>
+      <div class="metric-card" style="color:#dc2626;">Incorrect<div id="wrongVal">0</div></div>
+      <div class="metric-card" style="color:#64748b;">Unattempted<div id="unattemptedVal">0</div></div>
+    </div>
+
+    <button onclick="window.print()" class="btn btn-print">Download / Print Test Preview</button>
+    
+    <div id="reviewContainer"></div>
+  </div>
+
+</div>
+
+<script>
+  // Add allowed registered mobile numbers here
+  const ALLOWED_MOBILES = ["8759966414","8145053046","7421351001","7421351004","7421351009","7421351016","7421351025","7421351036",
+"7421351049","7421351064","7421351081","7421351100","7421351121","7421351144","8972752901","7076550802",
+"9749402798","9874772380","9093537364","9382719113","7001942262","7478315270","9800477643","7421791001",
+"7421791004","7421791009","7421791016","7421791025","7421791036","7421791049","7421791064","7421791081",
+"7421791100","7421791121","7421791144","9088990506","7029360599","8918901391","8016518417","9339393254",
+"6294038967","8167441990","9647585496","9681442002","9732051169","9547033989","8116090066","7364971515",
+"8370866731","9851362687","7872691497","9734643145","9851209305","8972639408","7001871581","7432068517",
+"8926717457","7908536664","9609611039","8327674562","9051665797","9163286400","6294592503","9064182595",
+"9593772769","9002293294","7029585292","9064165256","6295901801","9064545311","9903414570","9932311821",
+"7501982409","8370817857","7501982409","9674475643","8170087038","9163222241","8481099313","8918875064",
+"9874466619","7001216544","9883449646","6292344934","9883288464","9051217208","9093398335","6295103380",
+"9563151044","9681876140","8158850481","9883607923","7319026448","6295837466","8927099749"]; 
+  const MAX_ATTEMPTS = 30;
+  
+  // Replace with your Web App Deployment URL from Google Apps Script
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxY6YR-QVZnPMuCwOIDv1jGQe-Xw03n9amhDEwn6YCyOBHGWlKVdK1Y1IhNXkQOflO-_w/exec"; 
+
+  // Complete Question Database (100 Questions from Misc mock test 12.docx)
+  const questionsData = [
+    { q: "সিন্ধু সভ্যতার কোন নগর থেকে বৃহত্তম শিলালিপির নিদর্শন পাওয়া গেছে?", options: ["A) মহেঞ্জোদারো", "B) হরপ্পা", "C) কালীবঙ্গান", "D) ধোলাভিরা"], ans: "D" },
+    { q: "বৌদ্ধধর্মে ‘ধর্মচক্র প্রবর্তন’ বলতে কী বোঝায়?", options: ["A) বুদ্ধের মহাপরিনির্বাণ", "B) বুদ্ধের জন্ম", "C) বুদ্ধের সারণাথে প্রথম ধর্মোপদেশ প্রদান", "D) বুদ্ধের বোধিলাভ"], ans: "C" },
+    { q: "অশোকের ‘ধম্ম’-এর প্রচার ও নৈতিক আচরণ তদারকির জন্য নিযুক্ত বিশেষ আধিকারিকদের কী বলা হত?", options: ["A) রাজুক", "B) ধর্মমহামাত্র", "C) যুক্ত", "D) গ্রামিক"], ans: "B" },
+    { q: "ভারতে নিত্যপ্রয়োজনীয় দ্রব্যের মজুতদারি নিষিদ্ধ করার ব্যবস্থা কোন সুলতান গ্রহণ করেছিলেন?", options: ["A) ইলতুৎমিশ", "B) বলবন", "C) আলাউদ্দিন খিলজি", "D) ফিরোজ শাহ তুঘলক"], ans: "C" },
+    { q: "বাহমনি রাজ্যের বিখ্যাত মন্ত্রী মাহমুদ গাওয়ান কোথায় তাঁর বিখ্যাত মাদ্রাসা প্রতিষ্ঠা করেছিলেন?", options: ["A) বিদার", "B) গুলবর্গা", "C) বিজাপুর", "D) গোলকোন্ডা"], ans: "A" },
+    { q: "ভক্তি আন্দোলনের নায়নাররা প্রধানত কোন ধর্মীয় ধারার সঙ্গে যুক্ত ছিলেন?", options: ["A) বৈষ্ণবধর্ম", "B) শৈবধর্ম", "C) জৈনধর্ম", "D) বৌদ্ধধর্ম"], ans: "B" },
+    { q: "মুঘল চিত্রকলার ক্ষেত্রে সম্রাট জাহাঙ্গিরের আমলে কোন বৈশিষ্ট্য বিশেষভাবে বিকশিত হয়েছিল?", options: ["A) প্রতিকৃতি ও প্রকৃতির সূক্ষ্ম চিত্রায়ণ", "B) শুধুমাত্র ধর্মীয় চিত্র", "C) গুহাচিত্র", "D) পাথরের ভাস্কর্য"], ans: "A" },
+    { q: "মারাঠা প্রশাসনে ‘অষ্টপ্রধান’ বলতে কী বোঝায়?", options: ["A) আটটি দুর্গ", "B) আটজন মন্ত্রীর পরিষদ", "C) আটটি সামরিক বিভাগ", "D) আটটি করব্যবস্থা"], ans: "B" },
+    { q: "ভারতের প্রথম সংবাদপত্র হিসেবে সাধারণত কোনটিকে স্বীকৃতি দেওয়া হয়?", options: ["A) Bengal Gazette", "B) Sambad Kaumudi", "C) Mirat-ul-Akhbar", "D) Hindoo Patriot"], ans: "A" },
+    { q: "ভারতে পাশ্চাত্য শিক্ষার পক্ষে সিদ্ধান্ত গ্রহণকারী গভর্নর-জেনারেল কে ছিলেন?", options: ["A) লর্ড কর্নওয়ালিস", "B) লর্ড উইলিয়াম বেন্টিঙ্ক", "C) লর্ড রিপন", "D) লর্ড কার্জন"], ans: "B" },
+    { q: "কাকোরি ট্রেন অ্যাকশন কোন সালে সংঘটিত হয়?", options: ["A) 1922", "B) 1925", "C) 1928", "D) 1930"], ans: "B" },
+    { q: "তেভাগা আন্দোলনের প্রধান দাবি কী ছিল?", options: ["A) জমিদারি প্রথা বিলোপ", "B) বর্গাদারদের উৎপাদিত ফসলের দুই-তৃতীয়াংশ পাওয়া", "C) খাজনা সম্পূর্ণ বন্ধ", "D) শ্রমিকদের মজুরি বৃদ্ধি"], ans: "B" },
+    { q: "‘August Movement’ বা ভারত ছাড়ো আন্দোলন কোন সালে শুরু হয়?", options: ["A) 1930", "B) 1935", "C) 1942", "D) 1946"], ans: "C" },
+    { q: "সুভাষচন্দ্র বসুর ‘Great Escape’ কোন সালে সংঘটিত হয়?", options: ["A) 1939", "B) 1940", "C) 1941", "D) 1942"], ans: "C" },
+    { q: "ভারতের দক্ষিণ মালভূমির সর্বোচ্চ শৃঙ্গ কোনটি?", options: ["A) আনাইমুদি", "B) সাতপুরা", "C) নীলগিরি", "D) মহাবলেশ্বর"], ans: "A" },
+    { q: "ভারতের প্রথম জাতীয় উদ্যান কোনটি?", options: ["A) কানহা জাতীয় উদ্যান", "B) রাজাজি জাতীয় উদ্যান", "C) জিম করবেট জাতীয় উদ্যান", "D) নন্দাদেবী জাতীয় উদ্যান"], ans: "C" },
+    { q: "নর্মদা নদী কোন ধরনের ভূ-গঠনের মধ্য দিয়ে প্রবাহিত হয়?", options: ["A) ভাঁজ পর্বত", "B) Fault trough বা রিফ্ট উপত্যকা", "C) বদ্বীপ", "D) লেগুন"], ans: "B" },
+    { q: "পশ্চিমবঙ্গের দুর্গাপুর কোন নদীর তীরে অবস্থিত?", options: ["A) অজয়", "B) কংসাবতী", "C) ময়ূরাক্ষী", "D) দামোদর"], ans: "D" },
+    { q: "পশ্চিমবঙ্গের কোন সংরক্ষিত অঞ্চলটি বাঘ সংরক্ষণ প্রকল্পের সঙ্গে যুক্ত এবং ডুয়ার্স অঞ্চলে অবস্থিত?", options: ["A) বক্সা টাইগার রিজার্ভ", "B) সিঙ্গালিলা জাতীয় উদ্যান", "C) জলদাপাড়া জাতীয় উদ্যান", "D) গরুমারা জাতীয় উদ্যান"], ans: "A" },
+    { q: "GSLV-F17/EOS-05 mission সম্পর্কে কোন বক্তব্যটি সঠিক?", options: ["A) এটি GSLV-এর 10তম flight", "B) এটি GSLV-এর 15তম flight", "C) এটি GSLV-এর 19তম flight", "D) এটি GSLV-এর 25তম flight"], ans: "C" },
+    { q: "অজয় নদী কোন দুটি নদীর মধ্যবর্তী অঞ্চলে প্রবাহিত হয়?", options: ["A) দামোদর ও রূপনারায়ণ", "B) রূপনারায়ণ ও কংসাবতী", "C) সুবর্ণরেখা ও রূপনারায়ণ", "D) দামোদর ও ময়ূরাক্ষী"], ans: "D" },
+    { q: "Exercise Malabar কোন দেশগুলির নৌবাহিনীর সঙ্গে সম্পর্কিত?", options: ["A) ভারত, জাপান, USA ও অস্ট্রেলিয়া", "B) ভারত, রাশিয়া, চীন ও ইরান", "C) ভারত, ফ্রান্স, জার্মানি ও UK", "D) ভারত, বাংলাদেশ, নেপাল ও ভুটান"], ans: "A" },
+    { q: "পশ্চিমবঙ্গের গাঙ্গেয় সমভূমির পলিমাটি কোন অর্থকরী ফসলের জন্য বিশেষভাবে উপযোগী?", options: ["A) চা", "B) পাট", "C) কফি", "D) রাবার"], ans: "B" },
+    { q: "ভারতের সংবিধান সভা কোন পরিকল্পনার ভিত্তিতে গঠিত হয়েছিল?", options: ["A) ক্রিপস মিশন", "B) ওয়াভেল পরিকল্পনা", "C) ক্যাবিনেট মিশন পরিকল্পনা", "D) মাউন্টব্যাটেন পরিকল্পনা"], ans: "C" },
+    { q: "ভারতীয় সংবিধানের কোন অনুচ্ছেদে অস্পৃশ্যতা বিলোপের কথা বলা হয়েছে?", options: ["A) Article 15", "B) Article 16", "C) Article 17", "D) Article 18"], ans: "C" },
+    { q: "সংবিধানের Article 23 মূলত কী নিষিদ্ধ করে?", options: ["A) ধর্মীয় বৈষম্য", "B) মানব পাচার ও জবরদস্তিমূলক শ্রম", "C) সংবাদপত্রের উপর নিয়ন্ত্রণ", "D) সম্পত্তির অধিকার হরণ"], ans: "B" },
+    { q: "ভারতীয় সংবিধানে Directive Principles of State Policy কোন দেশের সংবিধান থেকে অনুপ্রাণিত?", options: ["A) আয়ারল্যান্ড", "B) মার্কিন যুক্তরাষ্ট্র", "C) কানাডা", "D) অস্ট্রেলিয়া"], ans: "A" },
+    { q: "সুপ্রিম কোর্টের ‘Court of Record’ হিসেবে মর্যাদা কোন অনুচ্ছেদে স্বীকৃত?", options: ["A) Article 124", "B) Article 129", "C) Article 136", "D) Article 143"], ans: "B" },
+    { q: "সংসদের দুটি অধিবেশনের মধ্যে সর্বাধিক কত মাসের ব্যবধান থাকতে পারে?", options: ["A) 3 মাস", "B) 4 মাস", "C) 6 মাস", "D) 1 বছর"], ans: "C" },
+    { q: "2026 SCO Summit-এ ভারতের সমর্থিত উদ্যোগগুলির মধ্যে কোনটি ছিল?", options: ["A) SCO Charter-এ English-কে official language হিসেবে স্বীকৃতি দেওয়ার উদ্যোগ", "B) Euro currency চালু", "C) NATO-তে SCO-এর যোগদান", "D) ASEAN-এর সঙ্গে একীভূতকরণ"], ans: "A" },
+    { q: "ভারতের সংবিধানের ‘Basic Structure Doctrine’ কোন মামলার সঙ্গে যুক্ত?", options: ["A) গোলকনাথ মামলা", "B) কেশবানন্দ ভারতী মামলা", "C) মিনার্ভা মিলস মামলা", "D) শঙ্করী প্রসাদ মামলা"], ans: "B" },
+    { q: "পশ্চিমবঙ্গের ক্রীড়াবিদ Swapna Barman কোন athletics event-এর জন্য বিখ্যাত?", options: ["A) 100 m Sprint", "B) Heptathlon", "C) Long Jump", "D) Marathon"], ans: "B" },
+    { q: "ভারতে ‘Plan Holiday’ কোন সময়কালকে বলা হয়?", options: ["A) 1951–56", "B) 1966–69", "C) 1974–79", "D) 1990–92"], ans: "B" },
+    { q: "কৃষিক্ষেত্রে ‘e-NAM’ মূলত কীসের সঙ্গে সম্পর্কিত?", options: ["A) জাতীয় কৃষি বাজার", "B) কৃষি বিমা", "C) সার ভর্তুকি", "D) সেচ প্রকল্প"], ans: "A" },
+    { q: "ভারতের ব্যাংকিং ব্যবস্থায় ‘NPA’ বলতে কী বোঝায়?", options: ["A) Net Profit Account", "B) Non-Performing Asset", "C) National Payment Authority", "D) New Public Account"], ans: "B" },
+    { q: "ভারতের অর্থনীতিতে সর্বাধিক অবদান রাখে—", options: ["A) কৃষি", "B) শিল্প", "C) পরিষেবা খাত", "D) বনজ সম্পদ"], ans: "C" },
+    { q: "ভারতের অর্থনীতিতে ‘Human Capital’ গঠনের সঙ্গে কোন ক্ষেত্রগুলি সবচেয়ে সরাসরি যুক্ত?", options: ["A) শিক্ষা ও স্বাস্থ্য", "B) শুধু শিল্প", "C) শুধু কৃষি", "D) শুধু ব্যাংকিং"], ans: "A" },
+    { q: "PM-KISAN প্রকল্প চালু হয়—", options: ["A) 2017", "B) 2018", "C) 2019", "D) 2020"], ans: "C" },
+    { q: "2026 সালে আন্তর্জাতিক ক্রিকেটে 11,000 রান পূর্ণ করে প্রথম মহিলা ক্রিকেটার হওয়ার রেকর্ড কে গড়েছেন?", options: ["A) মিতালি রাজ", "B) স্মৃতি মন্ধানা", "C) হরমনপ্রীত কৌর", "D) শেফালি বর্মা"], ans: "B" },
+    { q: "‘ছৌ’ নৃত্যের উৎপত্তিস্থল হিসেবে পশ্চিমবঙ্গের কোন জেলা বিশেষভাবে পরিচিত?", options: ["A) বাঁকুড়া", "B) পুরুলিয়া", "C) মুর্শিদাবাদ", "D) নদিয়া"], ans: "B" },
+    { q: "‘পদাতিক’ কাব্যগ্রন্থের রচয়িতা কে?", options: ["A) সুকান্ত ভট্টাচার্য", "B) কাজী নজরুল ইসলাম", "C) অরুণ মিত্র", "D) সুভাষ মুখোপাধ্যায়"], ans: "D" },
+    { q: "নিচের কে ‘Bengal School of Art’-এর সদস্য ছিলেন না?", options: ["A) নন্দলাল বসু", "B) রাজা রবি বর্মা", "C) অবনীন্দ্রনাথ ঠাকুর", "D) সুনয়নী দেবী"], ans: "B" },
+    { q: "‘Father of Indian Space Programme’ নামে কে পরিচিত?", options: ["A) সতীশ ধাওয়ান", "B) বিক্রম সারাভাই", "C) কে. সিভান", "D) এস. সোমনাথ"], ans: "B" },
+    { q: "LiDAR প্রযুক্তির মূল উদ্দেশ্য কী?", options: ["A) রেডিও তরঙ্গের মাধ্যমে শব্দ শনাক্ত করা", "B) লেজার আলোর সাহায্যে দূরত্ব ও ত্রিমাত্রিক তথ্য নির্ণয় করা", "C) কেবল তাপমাত্রা মাপা", "D) রক্তচাপ মাপা"], ans: "B" },
+    { q: "IPv4 address-এর দৈর্ঘ্য কত bit?", options: ["A) 16 bit", "B) 32 bit", "C) 64 bit", "D) 128 bit"], ans: "B" },
+    { q: "ভারতের প্রথম মহিলা মুখ্যমন্ত্রী কে ছিলেন?", options: ["A) ইন্দিরা গান্ধী", "B) সুচেতা কৃপালনী", "C) সরোজিনী নাইডু", "D) বিজয়লক্ষ্মী পণ্ডিত"], ans: "B" },
+    { q: "‘গীতগোবিন্দ’-এর রচয়িতা কে?", options: ["A) কালিদাস", "B) জয়দেব", "C) বাণভট্ট", "D) ভবভূতি"], ans: "B" },
+    { q: "ভারতীয় সংবিধানের কোন অনুচ্ছেদকে ড. বি. আর. আম্বেদকর “সংবিধানের হৃদয় ও আত্মা” বলে অভিহিত করেছিলেন?", options: ["A) অনুচ্ছেদ 14", "B) অনুচ্ছেদ 19", "C) অনুচ্ছেদ 21", "D) অনুচ্ছেদ 32"], ans: "D" },
+    { q: "ভারতের জাতীয় আয় প্রথম বৈজ্ঞানিকভাবে অনুমান করার চেষ্টা কে করেছিলেন?", options: ["A) পি. সি. মহলানবিশ", "B) দাদাভাই নওরোজি", "C) ভি. কে. আর. ভি. রাও", "D) অমর্ত্য সেন"], ans: "B" },
+    { q: "World Telecommunication and Information Society Day কবে পালিত হয়?", options: ["A) 17 May", "B) 5 June", "C) 28 February", "D) 10 October"], ans: "A" },
+    { q: "দন্তচিকিৎসক দাঁতের পরীক্ষা করার সময় সাধারণত কোন ধরনের দর্পণ ব্যবহার করেন?", options: ["A) উত্তল দর্পণ", "B) অবতল দর্পণ", "C) সমতল দর্পণ", "D) অবতল লেন্স"], ans: "B" },
+    { q: "নিউটনের প্রথম সূত্র মূলত কোন ধারণার সঙ্গে সম্পর্কিত?", options: ["A) জড়তা", "B) শক্তির সংরক্ষণ", "C) ভরবেগের সংরক্ষণ", "D) মহাকর্ষ"], ans: "A" },
+    { q: "বায়ুমণ্ডলের কোন স্তরে ওজোনের ঘনত্ব তুলনামূলকভাবে বেশি?", options: ["A) ট্রপোস্ফিয়ার", "B) স্ট্র্যাটোস্ফিয়ার", "C) মেসোস্ফিয়ার", "D) থার্মোস্ফিয়ার"], ans: "B" },
+    { q: "নিম্নলিখিত কোন মৌলিক অধিকারটি কেবল ভারতীয় নাগরিকদের জন্য সংরক্ষিত?", options: ["A) আইনের দৃষ্টিতে সমতা", "B) জীবন ও ব্যক্তিগত স্বাধীনতার अधिकार", "C) বাক্ ও মতপ্রকাশের স্বাধীনতা", "D) ধর্মীয় স্বাধীনতার অধিকার"], ans: "C" },
+    { q: "Aluminium-এর যোজ্যতা কত?", options: ["A) 1", "B) 2", "C) 3", "D) 4"], ans: "C" },
+    { q: "Aqua Regia-তে Hydrochloric acid ও Nitric acid-এর আয়তনের অনুপাত কত?", options: ["A) 1 : 1", "B) 1 : 3", "C) 3 : 1", "D) 2 : 1"], ans: "C" },
+    { q: "Bronze হল কোন দুটি धातুর সংকর?", options: ["A) Copper ও Zinc", "B) Copper ও Tin", "C) Iron ও Carbon", "D) Aluminium ও Copper"], ans: "B" },
+    { q: "ম্যালেরিয়া রোগের বাহক কোনটি?", options: ["A) Aedes মশা", "B) Culex মশা", "C) Anopheles মশা", "D) Housefly"], ans: "C" },
+    { q: "নিচের কোনটি সঠিকভাবে মেলানো হয়েছে?", options: ["A) Vitamin B3 — Niacin", "B) Vitamin C — Retinol", "C) Vitamin D — Thiamine", "D) Vitamin K — Riboflavin"], ans: "A" },
+    { q: "Ecological succession-এর প্রাথমিক পর্যায়ে অনুর্বর শিলার উপর সাধারণত কোন জীব pioneer species হিসেবে কাজ করে?", options: ["A) লাইকেন", "B) মাছ", "C) ঘাসফড়িং", "D) সরীসৃপ"], ans: "A" },
+    { q: "একটি ‘Carbon Sink’-এর উদাহরণ কোনটি?", options: ["A) বনভূমি", "B) কয়লাভিত্তিক বিদ্যুৎকেন্দ্র", "C) পেট্রোলচালিত গাড়ি", "D) সিমেন্ট কারখানা"], ans: "A" },
+    { q: "নর্মদা ও তাপ্তী নদী সম্পর্কে কোন বক্তব্যটি সঠিক?", options: ["A) উভয়ই বঙ্গোপসাগরে পতিত হয়", "B) উভয়ই আরব সাগরে পতিত হয়", "C) নর্মদা বঙ্গোপসাগরে এবং তাপ্তী আরব সাগরে পতিত হয়", "D) নর্মদা আরব সাগরে এবং তাপ্তী বঙ্গোপসাগরে পতিত হয়"], ans: "B" },
+    { q: "Environment (Protection) Act ভারতে কোন সালে প্রণীত হয়?", options: ["A) 1972", "B) 1976", "C) 1986", "D) 1992"], ans: "C" },
+    { q: "নিচের কোনটি একটি অন্তঃস্রাবী গ্রন্থি (Endocrine gland)?", options: ["A) লালাগ্রন্থি", "B) ঘর্মগ্রন্থি", "C) থাইরয়েড গ্রন্থি", "D) অশ্রুগ্রন্থি"], ans: "C" },
+    { q: "নিচের কোন জোড়াটি ভুলভাবে মেলানো হয়েছে?", options: ["A) সুন্দরবন — ম্যানগ্রোভ অরণ্য", "B) কাজিরাঙা — একশৃঙ্গ গণ্ডার", "C) গির — এশীয় সিংহ", "D) সাইলেন্ট ভ্যালি — ম্যানগ্রোভ অরণ্য"], ans: "D" },
+    { q: "নিচের কোনটি Rational Number?", options: ["A) π", "B) √2", "C) √11", "D) 11/13"], ans: "D" },
+    { q: "√0.000729-এর মান কত?", options: ["A) 0.0027", "B) 0.027", "C) 0.27", "D) 2.7"], ans: "B" },
+    { q: "ভারতীয় সংবিধানে ‘সমবায় সমিতি’ (Co-operative Societies)-কে মৌলিক অধিকার ও রাষ্ট্র পরিচালনার নীতির সঙ্গে যুক্ত করার পাশাপাশি কোন অংশে সাংবিধানিক স্বীকৃতি দেওয়া হয়েছে?", options: ["A) Part IX-A", "B) Part IX-B", "C) Part X", "D) Part XII"], ans: "B" },
+    { q: "সাতটি ধারাবাহিক জোড় সংখ্যার ক্ষুদ্রতম সংখ্যা 18। তাদের গড় কত?", options: ["A) 22", "B) 23", "C) 24", "D) 25"], ans: "C" },
+    { q: "A একটি কাজ 25 দিনে শেষ করে। 80% কাজ করতে কত দিন লাগবে?", options: ["A) 18 দিন", "B) 19 দিন", "C) 20 দিন", "D) 22 দিন"], ans: "C" },
+    { q: "একটি ট্যাঙ্ক A পাইপে 15 মিনিটে, B পাইপে 20 মিনিটে পূর্ণ হয় এবং C পাইপে 60 মিনিটে খালি হয়। তিনটি পাইপ একসঙ্গে খুললে ট্যাঙ্কটি কত সময়ে পূর্ণ হবে?", options: ["A) 6 মিনিট", "B) 7½ মিনিট", "C) 8 মিনিট", "D) 10 মিনিট"], ans: "B" },
+    { q: "কোন বৃহত্তম সংখ্যা দ্বারা 185, 265 ও 365-কে ভাগ করলে প্রত্যেক ক্ষেত্রেই ভাগশেষ 5 থাকবে?", options: ["A) 20", "B) 30", "C) 40", "D) 60"], ans: "A" },
+    { q: "দুটি ট্রেনের দৈর্ঘ্য যথাক্রমে 180 m ও 220 m। তারা বিপরীত দিক থেকে যথাক্রমে 54 km/h ও 72 km/h বেগে চললে একে অপরকে অতিক্রম করতে কত সময় লাগবে?", options: ["A) 10 sec", "B) 11.43 sec", "C) 12.5 sec", "D) 15 sec"], ans: "B" },
+    { q: "একটি দ্রব্যের ক্রয়মূল্য ₹800। 25% markup করে 12% discount দিলে লাভের হার কত?", options: ["A) 8%", "B) 10%", "C) 12%", "D) 15%"], ans: "B" },
+    { q: "একটি দোকানদার 25% লাভ করতে চান। তিনি 10% Discount দেন। যদি ক্রয়মূল্য ₹720 হয়, তবে Marked Price কত হবে?", options: ["A) ₹950", "B) ₹980", "C) ₹1000", "D) ₹1020"], ans: "C" },
+    { q: "দুটি দ্রব্য একই selling price-এ বিক্রি করা হল। একটিতে 25% লাভ এবং অন্যটিতে 20% ক্ষতি হলে মোট ফলাফল কী?", options: ["A) 2.44% ক্ষতি", "B) 2.44% লাভ", "C) 5% ক্ষতি", "D) কোনো লাভ-ক্ষতি নেই"], ans: "A" },
+    { q: "একটি গাড়ি 2 ঘণ্টা 50 কিমি/ঘণ্টা এবং পরবর্তী 3 ঘণ্টা 70 কিমি/ঘণ্টা বেগে চলে। গড় বেগ কত?", options: ["A) 60 কিমি/ঘণ্টা", "B) 62 কিমি/ঘণ্টা", "C) 64 কিমি/ঘণ্টা", "D) 66 কিমি/ঘণ্টা"], ans: "B" },
+    { q: "একটি দ্রব্যের দাম 25% বৃদ্ধি পেলে একই পরিমাণ টাকা খরচ করতে ভোগের পরিমাণ কত শতাংশ কমাতে হবে?", options: ["A) 15%", "B) 20%", "C) 25%", "D) 30%"], ans: "B" },
+    { q: "একটি পরীক্ষায় পাশ নম্বর মোট নম্বরের 48%। একজন ছাত্র 216 নম্বর পেয়ে 24 নম্বরে ফেল করল। পরীক্ষার মোট নম্বর কত?", options: ["A) 400", "B) 450", "C) 500", "D) 550"], ans: "C" },
+    { q: "A : B = 7 : 9 এবং B : C = 6 : 5 হলে A : B : C কত?", options: ["A) 7 : 9 : 5", "B) 14 : 18 : 15", "C) 14 : 9 : 15", "D) 7 : 6 : 5"], ans: "B" },
+    { q: "A ₹60,000 এবং B ₹75,000 নিয়ে ব্যবসা শুরু করল। A 10 মাস এবং B 8 মাস ব্যবসায় থাকলে লাভের অনুপাত কত?", options: ["A) 3 : 4", "B) 1 : 1", "C) 4 : 5", "D) 5 : 4"], ans: "B" },
+    { q: "₹10,000-এর উপর 10% বার্ষিক হারে 2 বছরের সরল সুদ ও চক্রবৃদ্ধি সুদের পার্থক্য কত?", options: ["A) ₹50", "B) ₹100", "C) ₹150", "D) ₹200"], ans: "B" },
+    { q: "9টি সংখ্যার গড় 28। প্রথম 5টি সংখ্যার গড় 24 এবং শেষ 5টির গড় 32 হলে পঞ্চম সংখ্যাটি কত?", options: ["A) 24", "B) 26", "C) 28", "D) 30"], ans: "C" },
+    { q: "60 লিটার দুধ ও জলের মিশ্রণে অনুপাত 2 : 1। অনুপাত 1 : 1 করতে কত লিটার জল যোগ করতে হবে?", options: ["A) 20 L", "B) 30 L", "C) 40 L", "D) 60 L"], ans: "B" },
+    { q: "40 লিটার দুধ ও জলের মিশ্রণে অনুপাত 3 : 2। অনুপাত 2 : 1 করতে কত লিটার দুধ যোগ করতে হবে?", options: ["A) 6 L", "B) 8 L", "C) 10 L", "D) 12 L"], ans: "B" },
+    { q: "একটি নৌকার স্থির জলে বেগ 15 km/h এবং স্রোতের বেগ 3 km/h। 72 km downstream এবং 72 km upstream যেতে মোট কত সময় লাগবে?", options: ["A) 8 ঘণ্টা", "B) 9 ঘণ্টা", "C) 10 ঘণ্টা", "D) 12 ঘণ্টা"], ans: "C" },
+    { q: "একটি সংখ্যা 12 দ্বারা ভাগ করলে ভাগশেষ 5 থাকে। সংখ্যাটিকে 3 দিয়ে গুণ করে 12 দ্বারা ভাগ করলে ভাগশেষ কত হবে?", options: ["A) 1", "B) 2", "C) 3", "D) 5"], ans: "C" },
+    { q: "2026 সালের Winter Olympic Games-এর official Olympic mascot-এর নাম কী?", options: ["A) Milo", "B) Tina", "C) Bing", "D) Phryge"], ans: "B" },
+    { q: "NaOH-এর aqueous solution কোন প্রকৃতির?", options: ["A) অম্লীয়", "B) ক্ষারীয়", "C) নিরপেক্ষ", "D) লবণাক্ত"], ans: "B" },
+    { q: "2026 ICC Men's T20 World Cup Final-এ Player of the Match কে নির্বাচিত হন?", options: ["A) Sanju Samson", "B) Jasprit Bumrah", "C) Hardik Pandya", "D) Ishan Kishan"], ans: "B" },
+    { q: "2025 World Athletics Championships কোন শহরে অনুষ্ঠিত হয়েছিল?", options: ["A) Paris", "B) Tokyo", "C) London", "D) Doha"], ans: "B" },
+    { q: "2026 সালে প্রথম মহিলা ক্রিকেটার হিসেবে আন্তর্জাতিক ক্রিকেটে 11,000 রান পূর্ণ করেন কে?", options: ["A) Mithali Raj", "B) Smriti Mandhana", "C) Harmanpreet Kaur", "D) Shafali Verma"], ans: "B" },
+    { q: "2026 Aichi-Nagoya Asian Games-এ ভারতের প্রথম Gold Medal কোন খেলায় আসে?", options: ["A) Shooting", "B) Women's T20 Cricket", "C) Boxing", "D) Wrestling"], ans: "B" },
+    { q: "Glasgow 2026 Commonwealth Games-এর official programme-এ মোট কতটি sport অন্তর্ভুক্ত ছিল?", options: ["A) 8", "B) 9", "C) 10", "D) 12"], ans: "C" },
+    { q: "2030 Winter Olympic Games-এর host হিসেবে কোন অঞ্চল নির্বাচিত হয়েছে?", options: ["A) Swiss Alps", "B) French Alps", "C) Austrian Alps", "D) Canadian Rockies"], ans: "B" },
+    { q: "1 জুলাই 2026 থেকে Indian Air Force-এর Southern Air Command-এর Air Officer Commanding-in-Chief হিসেবে কে দায়িত্ব গ্রহণ করেন?", options: ["A) Air Marshal Tejinder Singh", "B) Air Marshal Jasvir Singh Mann", "C) Air Marshal Manish Khanna", "D) Air Marshal Ashutosh Dixit"], ans: "B" },
+    { q: "2026 সালের 18th BRICS Summit-এর Theme কী ছিল?", options: ["A) One Earth, One Family", "B) Building for Resilience, Innovation, Cooperation and Sustainability", "C) Global South First", "D) Humanity First"], ans: "B" },
+    { q: "2026 সালের 26th SCO Summit কোন শহরে অনুষ্ঠিত হয়?", options: ["A) Astana", "B) Bishkek", "C) New Delhi", "D) Tashkent"], ans: "B" },
+    { q: "UNDP-এর Human Development Report 2025 অনুযায়ী 2023 সালের HDI-তে ভারতের স্থান কত?", options: ["A) 125", "B) 128", "C) 130", "D) 135"], ans: "C" }
+  ];
+
+  let currentStudent = { name: "", phone: "" };
+  let timerInterval = null;
+
+  // Authorization and Login Handler
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('studentName').value.trim();
+    const phone = document.getElementById('studentPhone').value.trim();
+
+    if (!ALLOWED_MOBILES.includes(phone)) {
+      alert("Access Denied! Your mobile number is not registered for this test.");
+      return;
+    }
+
+    let attempts = parseInt(localStorage.getItem('attempts_' + phone) || "0");
+    if (attempts >= MAX_ATTEMPTS) {
+      alert("Attempt limit exceeded! You have reached your maximum limit of 30 attempts.");
+      return;
+    }
+
+    // Increment Attempt Count
+    localStorage.setItem('attempts_' + phone, attempts + 1);
+    currentStudent = { name, phone };
+
+    // View Switching
+    document.getElementById('displayName').innerText = name;
+    document.getElementById('loginSection').classList.add('hidden');
+    document.getElementById('examSection').classList.remove('hidden');
+
+    renderQuestions();
+    startTimer(90 * 60); // 90 Minutes = 5400 Seconds
+  });
+
+  // Render Questions UI
+  function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = questionsData.map((item, idx) => `
+      <div class="question-card" id="q_card_${idx}">
+        <div class="question-title">${idx + 1}. ${item.q}</div>
+        <div class="options-list">
+          ${item.options.map((opt, oIdx) => {
+            const letter = String.fromCharCode(65 + oIdx);
+            return `
+              <label class="option-item">
+                <input type="radio" name="q_${idx}" value="${letter}">
+                ${opt}
+              </label>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Timer Counter
+  function startTimer(secondsLeft) {
+    const timerDisplay = document.getElementById('timerDisplay');
+    
+    timerInterval = setInterval(() => {
+      let minutes = Math.floor(secondsLeft / 60);
+      let seconds = secondsLeft % 60;
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+
+      if (--secondsLeft < 0) {
+        clearInterval(timerInterval);
+        alert("Time is up! Your test is being auto-submitted.");
+        submitExam();
+      }
+    }, 1000);
+  }
+
+  // Scoring Math (+2 / -0.5) & Submission
+  function submitExam() {
+    clearInterval(timerInterval);
+
+    let correctCount = 0;
+    let wrongCount = 0;
+    let unattemptedCount = 0;
+    let totalScore = 0;
+
+    questionsData.forEach((item, idx) => {
+      const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
+      if (selected) {
+        if (selected.value === item.ans) {
+          correctCount++;
+          totalScore += 2;
+        } else {
+          wrongCount++;
+          totalScore -= 0.5;
+        }
+      } else {
+        unattemptedCount++;
+      }
+    });
+
+    // Populate Results Screen
+    document.getElementById('scoreVal').innerText = totalScore;
+    document.getElementById('correctVal').innerText = correctCount;
+    document.getElementById('wrongVal').innerText = wrongCount;
+    document.getElementById('unattemptedVal').innerText = unattemptedCount;
+
+    // Send payload to Google Sheets
+    syncResultsToGoogleSheet({
+      name: currentStudent.name,
+      phone: currentStudent.phone,
+      score: totalScore,
+      correct: correctCount,
+      wrong: wrongCount,
+      unattempted: unattemptedCount
+    });
+
+    // Generate Green / Red Color-Coded Answer Key
+    renderReview();
+
+    document.getElementById('examSection').classList.add('hidden');
+    document.getElementById('resultSection').classList.remove('hidden');
+  }
+
+  // Render Detailed Review UI
+  function renderReview() {
+    const container = document.getElementById('reviewContainer');
+    container.innerHTML = questionsData.map((item, idx) => {
+      const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
+      const userSelection = selected ? selected.value : null;
+
+      return `
+        <div class="question-card">
+          <div class="question-title">${idx + 1}. ${item.q}</div>
+          <div class="options-list">
+            ${item.options.map((opt, oIdx) => {
+              const letter = String.fromCharCode(65 + oIdx);
+              let styleClass = "";
+              
+              if (letter === item.ans) {
+                styleClass = "correct-ans";
+              } else if (userSelection === letter && userSelection !== item.ans) {
+                styleClass = "wrong-ans";
+              }
+
+              return `<div class="option-item ${styleClass}">${opt}</div>`;
+            }).join('')}
+          </div>
+          <div class="status-tag">
+            ${userSelection === null ? '<span style="color:#64748b;">Status: Skipped</span>' :
+              userSelection === item.ans ? '<span style="color:#16a34a;">Status: Correct (+2)</span>' :
+              '<span style="color:#dc2626;">Status: Incorrect (-0.5)</span>'}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Google Sheets API Integration
+  function syncResultsToGoogleSheet(payload) {
+    if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") return;
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(err => console.error("Sheet Error:", err));
+  }
+</script>
+</body>
+</html>
